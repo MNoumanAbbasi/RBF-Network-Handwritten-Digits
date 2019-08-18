@@ -1,0 +1,2 @@
+Add sigmoid functions for outputs of all layers
+PCA on input layers (reduce dimension from 784 to 100)

@@ -1,9 +1,11 @@
-# RBF-Neural-Network-Handwritten-Digits
+# RBF-Network-Handwritten-Digits
 
-Radial Basis Function (RBF) Neural Network that can classify handwritten digits 0-9.  
+Radial Basis Function (RBF) Network that can classify handwritten digits 0-9.  
   
-Training Data used from MNIST Database  
-60,000 examples used for training.  
+## Background
+
+Radial basis function network (or RBFN for short) is an artificial neural network that uses radial basis functions as activation functions. The output of the network is a linear combination of radial basis functions of the inputs and neuron parameters.  
+   
   
 ## Architecture
 
@@ -20,4 +22,7 @@ Each for classifying a digit 0-9
 
 RBF functions is used where the centers are selected based on random sampling of 300 data samples.  
   
-Perceptron rule is used to update weights (Upgrade to stochastic gradient descent rule in future maybe)
+Perceptron rule is used to update weights (Upgrade to stochastic gradient descent rule in future maybe)  
+  
+
+Training Data used from MNIST Database.

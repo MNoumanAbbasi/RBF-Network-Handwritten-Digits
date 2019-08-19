@@ -3,6 +3,7 @@ import time
 import re
 import sys
 import math
+import matplotlib.pyplot as plt
 
 np.set_printoptions(threshold=sys.maxsize, suppress=True)
 np.random.seed(0)
@@ -41,6 +42,8 @@ class Network:
         self.Y = []
         self.W = np.random.uniform(-1, 1, (self.HSize, self.OSize))
         #self.B = np.random.uniform(-1, 1, (self.OSize))
+        self.trainingErrors = []
+        self.testErrors = []
 
     def loadData(self, filenameX, filenameY, sampleSize):
         """Loads training/test data
@@ -58,7 +61,6 @@ class Network:
 
     def train(self, numOfEpochs=1, learnRate=0.5):
         self.initializeCenters()
-        errorList = []
         print("Training...")
         for _ in range(numOfEpochs):      # no. of epoques
             # Take each data sample from the inputData
@@ -69,7 +71,7 @@ class Network:
                 error = (output - self.Y[i])
                 self.W = self.W - (learnRate * np.outer(HLayer, error))
                 #self.B = self.B - (learnRate * error)
-                errorList.append(error)
+                self.trainingErrors.append(sum(error**2))
         print("Training done")
         # Savinf weights in a file
         np.save("resultWeight", self.W)
@@ -89,6 +91,9 @@ class Network:
                 correctCount += 1
             totalCount += 1
             totalAvg += (correctCount*100.0)/totalCount
+
+            error = (output - yData[i])
+            self.testErrors.append(sum(error**2))
             # print((correctCount*100.0)/totalCount)
         print("Total Avg. Accuracy", totalAvg / yData.shape[0])
 
@@ -98,9 +103,14 @@ def rbf(x, C, beta=0.05):
         HList.append(math.exp((-1 * beta) * np.dot(x-c, x-c)))
     return np.array(HList)
 
+def plotLearningCurves(trainingErrors, testErrors):
+    plt.plot(trainingErrors[:5000])
+    plt.plot(testErrors[:1000])
+    plt.show()
+
 #######     MAIN    ######
 start = time.time()                 # TODO Input data should be functions of neural network class
-trainDataSize = 60000
+trainDataSize = 10000
 # MENU
 myNetwork = Network()
 while True:
@@ -118,6 +128,7 @@ while True:
         # print(myNetwork.W)
         print("Importing Data for testing...")
         myNetwork.predict(inputXFromFile("test.txt", 10000), inputYFromFile("test-labels.txt", 10000))
+        # plotLearningCurves(myNetwork.trainingErrors, myNetwork.testErrors)
     else:
         break
 print("Entire program took:", time.time()-start, "sec")

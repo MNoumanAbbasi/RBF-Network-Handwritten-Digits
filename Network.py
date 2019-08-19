@@ -40,7 +40,7 @@ class Network:
         self.C = []
         self.Y = []
         self.W = np.random.uniform(-1, 1, (self.HSize, self.OSize))
-        #self.B = np.random.uniform(-1, 1, (self.OSize))
+        # self.B = np.random.uniform(-1, 1, (self.OSize))
         self.trainingErrors = []
         self.testErrors = []
 
@@ -66,35 +66,35 @@ class Network:
             for i, x in enumerate(self.X):
                 HLayer = rbf(x, self.C)
                 # Multiply the weights to get output for each data
-                output = np.dot(HLayer, self.W)# + self.B
+                output = np.dot(HLayer, self.W) # + self.B
                 error = (output - self.Y[i])
                 self.W = self.W - (learnRate * np.outer(HLayer, error))
-                #self.B = self.B - (learnRate * error)
+                # self.B = self.B - (learnRate * error)
                 self.trainingErrors.append(sum(error**2))
         print("Training done")
         # Savinf weights in a file
         np.save("weights", self.W)
         # print(self.W)
 
-    def predict(self, xData, yData):
+    def predict(self):
         print("Prediciting...")
         totalAvg = totalCount = correctCount = 0.0
         self.initializeCenters()
         # Take each data sample from the inputData
-        for i, x in enumerate(xData):
+        for i, x in enumerate(self.X):
             HLayer = rbf(x, self.C)
-            output = np.dot(HLayer, self.W)
+            output = np.dot(HLayer, self.W) # + self.B
             o = np.argmax(output)
-            y = np.argmax(yData[i])
+            y = np.argmax(self.Y[i])
             if o == y:
                 correctCount += 1
             totalCount += 1
             totalAvg += (correctCount*100.0)/totalCount
 
-            error = (output - yData[i])
+            error = (output - self.Y[i])
             self.testErrors.append(sum(error**2))
             # print((correctCount*100.0)/totalCount)
-        print("Total Avg. Accuracy", totalAvg / yData.shape[0])
+        print("Total Avg. Accuracy", totalAvg / self.Y.shape[0])
 
 def rbf(x, C, beta=0.05):
     HList = []
@@ -103,13 +103,14 @@ def rbf(x, C, beta=0.05):
     return np.array(HList)
 
 def plotLearningCurves(trainingErrors, testErrors):
-    plt.plot(trainingErrors[:5000])
+    plt.plot(trainingErrors[:1000])
     plt.plot(testErrors[:1000])
     plt.show()
 
 #######     MAIN    ######
 start = time.time()                 # TODO Input data should be functions of neural network class
 trainDataSize = 10000
+testDataSize = 10000
 # MENU
 myNetwork = Network()
 while True:
@@ -126,7 +127,8 @@ while True:
         myNetwork.W = np.load(filename)
         # print(myNetwork.W)
         print("Importing Data for testing...")
-        myNetwork.predict(inputXFromFile("test.txt", 10000), inputYFromFile("test-labels.txt", 10000))
+        myNetwork.loadData("test.txt", "test-labels.txt", testDataSize)
+        myNetwork.predict()
         # plotLearningCurves(myNetwork.trainingErrors, myNetwork.testErrors)
     else:
         break

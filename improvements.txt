@@ -1,3 +1,4 @@
 Add sigmoid functions for outputs of all layers
 PCA on input layers (reduce dimension from 784 to 100)
 Add biases
+Store the values of centriods like resultWeight.npy

@@ -3,41 +3,35 @@ import time
 import re
 import sys
 import math
-from tempfile import TemporaryFile
 
 np.set_printoptions(threshold=sys.maxsize, suppress=True)
 np.random.seed(0)
 
-def inputXFromFile(filename, sampleSize):  # SampleSize given for performace enhancement
+def inputXFromFile(filename, sampleSize=60000):  # SampleSize given for performace enhancement
+    """Inputs the training examples X"""
     inputArray = np.zeros(shape=(sampleSize, 784))  # 784 = pixels of each image
     with open(filename, 'r') as file:
         for i in range(sampleSize):
             inputList = []
-            for _ in range(44):  # 44 lines of each input entry in file
-                line = file.readline()
-                if not line:
-                    return inputArray
-                line = line.strip("[")
-                line = line.replace("]", "")
+            for _ in range(44):  # 44 lines of each example in file
+                line = file.readline().strip("[").replace("]", "")
                 inputList += line.split()
             inputArray[i] = inputList
     # print("X Input Size:", inputArray.shape)
     return np.divide(inputArray, 255)
 
-def inputYFromFile(filename, sampleSize):
-    inputArray = np.zeros(shape=(sampleSize, 10))  # 784 = pixels of each image
+def inputYFromFile(filename, sampleSize=10000):
+    """Inputs the training examples Y"""
+    inputArray = np.zeros(shape=(sampleSize, 10))   # for each row, we want a column like [0 0 1 0 ...]
     with open(filename, 'r') as file:
         for i in range(sampleSize):
             value = file.readline()
-            if not value:
-                break
-            if value == '\n':
-                continue
+            if not value: break
             inputArray[i][int(value)] = 1
     # print("Y input size:", inputArray.shape)
     return inputArray
 
-class NeuralNetwork:
+class Network:
     def __init__(self, inputArray, resultArray):
         self.XSize = 784            # USe these values from inputData
         self.HSize = 300
@@ -49,9 +43,9 @@ class NeuralNetwork:
         #self.B = np.random.uniform(-1, 1, (self.OSize))
         self.learnRate = 0.5
 
-    def train(self):
+    def train(self, numOfEpochs=1):
         print("Training...")
-        for _ in range(1):      # no. of epoques
+        for _ in range(numOfEpochs):      # no. of epoques
             # Take each data sample from the inputData
             for i, x in enumerate(self.X):
                 HLayer = rbf(x, self.C)
@@ -98,12 +92,12 @@ while True:
         inputDataX = inputXFromFile("train.txt", trainDataSize)
         inputDataY = inputYFromFile("train-labels.txt", trainDataSize)
         print(trainDataSize, "Data samples imported in", time.time() - start, "sec")
-        myNetwork = NeuralNetwork(inputDataX, inputDataY)
+        myNetwork = Network(inputDataX, inputDataY)
         tempTime = time.time()
         myNetwork.train()
         print("Training took:", time.time() - tempTime, "sec")
     elif userInput == "2":
-        myNetwork = NeuralNetwork(inputXFromFile("train.txt", 500), inputYFromFile("train-labels.txt", 500))
+        myNetwork = Network(inputXFromFile("train.txt", 500), inputYFromFile("train-labels.txt", 500))
         filename = input("Enter file name containing weights: ")
         myNetwork.W = np.load(filename)
         # print(myNetwork.W)

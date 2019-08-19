@@ -5,7 +5,6 @@ Radial Basis Function (RBF) Network that can classify handwritten digits 0-9.
 ## Background
 
 Radial basis function network (or RBFN for short) is an artificial neural network that uses radial basis functions as activation functions. The output of the network is a linear combination of radial basis functions of the inputs and neuron parameters.  
-   
   
 ## Architecture
 
@@ -24,5 +23,4 @@ RBF functions is used where the centers are selected based on random sampling of
   
 Perceptron rule is used to update weights (Upgrade to stochastic gradient descent rule in future maybe)  
   
-
 Training Data used from MNIST Database.

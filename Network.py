@@ -34,7 +34,6 @@ def inputYFromFile(filename, sampleSize):
 
 class Network:
     def __init__(self, inputArray=None, resultArray=None):
-        # self.XSize = np.size(inputArray,1)
         self.HSize = 300
         self.OSize = 10
         self.X = []
@@ -74,7 +73,7 @@ class Network:
                 self.trainingErrors.append(sum(error**2))
         print("Training done")
         # Savinf weights in a file
-        np.save("resultWeight", self.W)
+        np.save("weights", self.W)
         # print(self.W)
 
     def predict(self, xData, yData):

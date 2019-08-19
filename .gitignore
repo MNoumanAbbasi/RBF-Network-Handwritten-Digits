@@ -2,5 +2,5 @@ test-labels.txt
 test.txt
 train-labels.txt
 train.txt
-resultWeight.npy
+weights.npy
 AI_Assignment2.pdf

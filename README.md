@@ -8,10 +8,10 @@ Radial basis function network (or RBFN for short) is an artificial neural networ
   
 ## Architecture
 
-Size: [784, 300, 10]  
+Size: [1, 300, 10]  
   
-* 784 input layer neurons  
-Each training example is an image of 784 pixels (28 x 28) so there are 784 features for the input layer.  
+* 1 input layer neurons  
+Each training example is an image of 784 pixels (28 x 28) so there are 784 features for the input layer. However, since this is an RBF Network, instead of having a neuron for each feature, we have 1 neuron which propogates each training example of 784 features to the hidden layer RBF Neurons  
   
 * 300 hidden layer neurons  
 Depends on the number of clusters *K*

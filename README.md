@@ -29,8 +29,8 @@ Each for classifying a digit 0-9
 
 ## RBF activation function
 
-<img src="http://www.sciweavers.org/tex2img.php?eq=e%5E%7B-%20%5Cbeta%20%5Cdot%20%20%5C%7C%20x%20-%20c%20%5C%7C%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" border="0" alt="e^{- \beta \dot  \| x - c \| " width="69" height="22" />
 The RBF function used is a Gaussian function as shown:
+<img src="http://www.sciweavers.org/tex2img.php?eq=e%5E%7B-%20%5Cbeta%20%5Cdot%20%20%5C%7C%20x%20-%20c%20%5C%7C%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" border="0" alt="e^{- \beta \dot  \| x - c \| " width="69" height="22" />
 
 The centers *c* are selected based on random sampling of 300 data samples. A possible improvement is to use kNN clustering to get *K* clusters instead.  
   

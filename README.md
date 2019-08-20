@@ -29,7 +29,7 @@ Each for classifying a digit 0-9
 
 ## RBF activation function
 
-<img src="http://www.sciweavers.org/tex2img.php?eq=e%5E%7B-%20%5Cbeta%20%5Cdot%20%20%5C%7C%20x%20-%20c%20%5C%7C%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" align="right" border="0" alt="e^{- \beta \dot  \| x - c \| " width="69" height="22" />
+<img src="http://www.sciweavers.org/tex2img.php?eq=e%5E%7B-%20%5Cbeta%20%5Cdot%20%20%5C%7C%20x%20-%20c%20%5C%7C%20&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0" border="0" alt="e^{- \beta \dot  \| x - c \| " width="69" height="22" />
 The RBF function used is a Gaussian function as shown:
 
 The centers *c* are selected based on random sampling of 300 data samples. A possible improvement is to use kNN clustering to get *K* clusters instead.  
@@ -62,6 +62,5 @@ Predict will import the 10,000 test examples and the weights (weights.npy). Usin
 
 ### Training Data
 
-Training Data used from MNIST Database.
-60,000 training examples and 10,000 test examples.
+Training Data used from MNIST Database. 60,000 training examples and 10,000 test examples.  
 The data is in text files and zipped.

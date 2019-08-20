@@ -61,7 +61,7 @@ class Network:
     def train(self, numOfEpochs=1, learnRate=0.5):
         self.initializeCenters()
         print("Training...")
-        for _ in range(numOfEpochs):      # no. of epoques
+        for _ in range(numOfEpochs):
             # Take each data sample from the inputData
             for i, x in enumerate(self.X):
                 HLayer = rbf(x, self.C)
@@ -72,14 +72,14 @@ class Network:
                 # self.B = self.B - (learnRate * error)
                 self.trainingErrors.append(sum(error**2))
         print("Training done")
-        # Savinf weights in a file
+        # Saving weights and centers in a file
         np.save("weights", self.W)
+        np.save("centers", self.C)
         # print(self.W)
 
     def predict(self):
         print("Prediciting...")
         totalAvg = totalCount = correctCount = 0.0
-        self.initializeCenters()
         # Take each data sample from the inputData
         for i, x in enumerate(self.X):
             HLayer = rbf(x, self.C)
@@ -116,20 +116,22 @@ myNetwork = Network()
 while True:
     userInput = input("1. Train the RBF Neural Network\n2. Predict using neural network:\n")
     if userInput == "1":
-        print("Importing Data for training...")
+        print("Importing data for training...")
         myNetwork.loadData("train.txt", "train-labels.txt", trainDataSize)
         print(f"{trainDataSize} training examples imported in {time.time()-start:.2f} sec")
         startTrainingTime = time.time()
         myNetwork.train(learnRate=0.5)
         print(f"Training took: {time.time()-startTrainingTime:.2f} sec")
     elif userInput == "2":
+        # Loading centers and weights from save file
         filename = input("Enter file name containing weights: ")
         myNetwork.W = np.load(filename)
+        myNetwork.C = np.load("centers.npy")
         # print(myNetwork.W)
-        print("Importing Data for testing...")
+        print("Importing data for testing...")
         myNetwork.loadData("test.txt", "test-labels.txt", testDataSize)
         myNetwork.predict()
         # plotLearningCurves(myNetwork.trainingErrors, myNetwork.testErrors)
     else:
         break
-print("Entire program took:", time.time()-start, "sec")
+print(f"Entire program took: {time.time()-start:.2f} sec")

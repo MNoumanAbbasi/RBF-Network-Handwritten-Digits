@@ -4,3 +4,4 @@ train-labels.txt
 train.txt
 weights.npy
 AI_Assignment2.pdf
+centers.npy

@@ -96,10 +96,15 @@ class Network:
         print("Total Avg. Accuracy:", totalAvg)
 
 def rbf(x, C, beta=0.05):
-    HList = []
-    for c in C:     # For each neuron in H layer
-        HList.append(math.exp((-1 * beta) * np.dot(x-c, x-c)))
-    return np.array(HList)
+    """Radial Basis Function\n
+    Parameters:\n
+    x: a training example
+    C: centers of used for the hidden layer
+    """
+    H = np.zeros(shape=(np.shape(C)[0]))
+    for i, c in enumerate(C):     # For each neuron in H layer
+        H[i] = math.exp((-1 * beta) * np.dot(x-c, x-c))
+    return H
 
 def plotLearningCurves(trainingErrors, testErrors):
     plt.plot(trainingErrors)
@@ -108,12 +113,13 @@ def plotLearningCurves(trainingErrors, testErrors):
 
 #######     MAIN    ######
 start = time.time()                 # TODO Input data should be functions of neural network class
-trainDataSize = 60000
+trainDataSize = 10000
 testDataSize = 10000
 # MENU
 myNetwork = Network()
 while True:
-    userInput = input("1. Train the RBF Neural Network\n2. Predict using neural network:\n")
+    print("1. Train the RBF Neural Network\n2. Predict using neural network")
+    userInput = input("Choose your option: ")
     if userInput == "1":
         print("Importing data for training...")
         myNetwork.loadData("train.txt", "train-labels.txt", trainDataSize)

@@ -113,7 +113,7 @@ def plotLearningCurves(trainingErrors, testErrors):
 
 #######     MAIN    ######
 start = time.time()                 # TODO Input data should be functions of neural network class
-trainDataSize = 10000
+trainDataSize = 60000
 testDataSize = 10000
 # MENU
 myNetwork = Network()

@@ -79,22 +79,21 @@ class Network:
 
     def predict(self):
         print("Prediciting...")
-        totalAvg = totalCount = correctCount = 0.0
+        totalAvg = count = correctCount = 0.0
         # Take each data sample from the inputData
-        for i, x in enumerate(self.X):
+        for count, x in enumerate(self.X):
             HLayer = rbf(x, self.C)
             output = np.dot(HLayer, self.W) # + self.B
             o = np.argmax(output)
-            y = np.argmax(self.Y[i])
+            y = np.argmax(self.Y[count])
             if o == y:
                 correctCount += 1
-            totalCount += 1
-            totalAvg += (correctCount*100.0)/totalCount
 
-            error = (output - self.Y[i])
+            error = (output - self.Y[count])
             self.testErrors.append(sum(error**2))
-            # print((correctCount*100.0)/totalCount)
-        print("Total Avg. Accuracy", totalAvg / self.Y.shape[0])
+            
+        totalAvg = (correctCount*100.0)/(count + 1)
+        print("Total Avg. Accuracy:", totalAvg)
 
 def rbf(x, C, beta=0.05):
     HList = []
@@ -109,7 +108,7 @@ def plotLearningCurves(trainingErrors, testErrors):
 
 #######     MAIN    ######
 start = time.time()                 # TODO Input data should be functions of neural network class
-trainDataSize = 10000
+trainDataSize = 60000
 testDataSize = 10000
 # MENU
 myNetwork = Network()
@@ -124,7 +123,7 @@ while True:
         print(f"Training took: {time.time()-startTrainingTime:.2f} sec")
     elif userInput == "2":
         # Loading centers and weights from save file
-        filename = input("Enter file name containing weights: ")
+        filename = input("Enter file name containing weights (default: weights.npy): ")
         myNetwork.W = np.load(filename)
         myNetwork.C = np.load("centers.npy")
         # print(myNetwork.W)

@@ -49,6 +49,10 @@ Using 60,000 training examples, this Network achieved ~88.5% accuracy on the tes
 
 ## Getting Started
 
+#### Requirements
+
+- Numpy and Matplotlib
+
 Extract the training data inside the Network.py directory.
 Running the Network.py script, you get two options: Train and Predict.
 

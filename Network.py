@@ -103,8 +103,8 @@ def rbf(x, C, beta=0.05):
     return np.array(HList)
 
 def plotLearningCurves(trainingErrors, testErrors):
-    plt.plot(trainingErrors[:1000])
-    plt.plot(testErrors[:1000])
+    plt.plot(trainingErrors)
+    plt.plot(testErrors)
     plt.show()
 
 #######     MAIN    ######
@@ -131,7 +131,8 @@ while True:
         print("Importing data for testing...")
         myNetwork.loadData("test.txt", "test-labels.txt", testDataSize)
         myNetwork.predict()
-        # plotLearningCurves(myNetwork.trainingErrors, myNetwork.testErrors)
+        # Uncomment line below to plot learning curves for first 1000 examples
+        # plotLearningCurves(myNetwork.trainingErrors[:1000], myNetwork.testErrors[:1000])
     else:
         break
 print(f"Entire program took: {time.time()-start:.2f} sec")

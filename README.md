@@ -22,7 +22,7 @@ Size: [1, 300, 10]
 Each training example is an image of 784 pixels (28 x 28) so there are 784 features for the input layer. However, since this is an RBF Network, instead of having a neuron for each feature, we have 1 neuron which propogates each training example of 784 features to the hidden layer RBF Neurons  
   
 - 300 hidden layer neurons  
-Depends on the number of clusters *K*
+Depends on the number of centers *C* (or clusters *K*) chosen
 
 - 10 output layer neurons  
 Each for classifying a digit 0-9  
@@ -58,9 +58,13 @@ Training will import the 60,000 training examples and train using that data. Fin
 
 ### Predict
 
-Predict will import the 10,000 test examples and the weights (weights.npy). Using the weights, the Network will predict results and compare and finally compute the aaccuracy of the Network.
+Predict will import the 10,000 test examples and the weights (weights.npy). Using the weights, the Network will predict results and compare and finally compute the classification accuracy of the Network.
+
+### Learning Curves
+
+For diagnostics, other than classification accuracy, you can plot the learning curves to check how the Network is learning. The function `plotLearningCurves` is included and can be called after predicting.
 
 ### Training Data
 
 Training Data used from MNIST Database. 60,000 training examples and 10,000 test examples.  
-The data is in text files and zipped.
+The data is in text files and zipped (compressed file size: 20.6 Mb).

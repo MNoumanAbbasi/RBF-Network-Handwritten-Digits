@@ -43,9 +43,10 @@ The parameters used for this performance test are as below. These parameters hav
 | Parameters | Value |
 | ---------- | ----: |
 | beta       | 0.05  |
-| Learning rate| 0.5 |
+| Learning rate| 0.3 |
 
-Using 60,000 training examples, this Network achieved ~88.5% accuracy on the test data.
+Training using all 60,000 examples takes around 3-4 minutes.  
+**Results:** Using 60,000 training examples, this Network achieved ~89.7% accuracy on the test data.
 
 ## Getting Started
 

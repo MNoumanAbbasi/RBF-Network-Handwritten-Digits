@@ -47,7 +47,7 @@ class Network:
         self.Y = []
         self.W = np.random.uniform(-1, 1, (self.HSize, self.OSize))
         # self.B = np.random.uniform(-1, 1, (self.OSize))
-        self.trainingErrors = []
+        self.trainErrors = []
         self.testErrors = []
 
     def loadData(self, filenameX, filenameY, sampleSize):
@@ -68,7 +68,7 @@ class Network:
 
     def train(self, numOfEpochs=1, learnRate=0.5):
         self.initializeCenters()
-        self.trainingErrors = np.zeros(shape=self.XSize)  # Preallocating numpy array
+        self.trainErrors = np.zeros(shape=self.XSize)  # Preallocating numpy array
         print("Training...")
         for _ in range(numOfEpochs):
             # Take each data sample from the inputData
@@ -79,7 +79,7 @@ class Network:
                 error = output - self.Y[i]
                 self.W = self.W - (learnRate * np.outer(HLayer, error))
                 # self.B = self.B - (learnRate * error)
-                self.trainingErrors[i] = 0.5 * sum(error ** 2)
+                self.trainErrors[i] = 0.5 * sum(error ** 2)
         print("Training done")
         # Saving weights and centers in a file
         np.save("weights", self.W)
@@ -118,12 +118,12 @@ def rbf(x, C, beta=0.05):
     return H
 
 
-def plotLearningCurves(trainingErrors, testErrors):
+def plotLearningCurves(trainErrors, testErrors):
     """Plots the learning curve of both training cost and test cost
     """
     # Averaging over the first {avgSize} examples
     avgSize = 100
-    Jtrain = trainingErrors.reshape(-1, avgSize).mean(axis=1)
+    Jtrain = trainErrors.reshape(-1, avgSize).mean(axis=1) if trainErrors else []
     Jtest = testErrors.reshape(-1, avgSize).mean(axis=1)
     plt.plot(Jtrain)
     plt.plot(Jtest)
@@ -161,8 +161,7 @@ while True:
         myNetwork.loadData("test.txt", "test-labels.txt", testDataSize)
         myNetwork.predict()
         # Uncomment line below to plot learning curves for first 1000 examples
-        # Do not use if training not done before
-        plotLearningCurves(myNetwork.trainingErrors[:10000], myNetwork.testErrors[:10000])
+        plotLearningCurves(myNetwork.trainErrors[:10000], myNetwork.testErrors[:10000])
     else:
         break
 print(f"Entire program took: {time.time()-start:.2f} sec")

@@ -84,7 +84,6 @@ class Network:
         # Saving weights and centers in a file
         np.save("weights", self.W)
         np.save("centers", self.C)
-        # print(self.W)
 
     def predict(self):
         self.testErrors = np.zeros(shape=self.XSize)  # Preallocating numpy array
@@ -119,13 +118,14 @@ def rbf(x, C, beta=0.05):
 
 
 def plotLearningCurves(trainErrors, testErrors):
-    """Plots the learning curve of both training cost and test cost
+    """Plots the learning curves of both training cost and test cost
     """
     # Averaging over the first {avgSize} examples
     avgSize = 100
-    Jtrain = trainErrors.reshape(-1, avgSize).mean(axis=1) if trainErrors else []
+    if type(trainErrors) is np.ndarray:     # if trainError data is available
+        Jtrain = trainErrors.reshape(-1, avgSize).mean(axis=1)
+        plt.plot(Jtrain)
     Jtest = testErrors.reshape(-1, avgSize).mean(axis=1)
-    plt.plot(Jtrain)
     plt.plot(Jtest)
     plt.xlabel(f"Data examples in {avgSize}s")
     plt.ylabel("Cost")
@@ -139,7 +139,7 @@ testDataSize = 10000
 # MENU
 myNetwork = Network()
 while True:
-    print("1. Train the RBF Neural Network\n2. Predict using neural network")
+    print("1. Train the RBF Network\n2. Predict using the RBF Network")
     userInput = input("Choose your option: ")
     if userInput == "1":
         print("Importing data for training...")
@@ -149,7 +149,7 @@ while True:
             f"{trainDataSize} training examples imported in {time.time()-startTime:.2f} sec"
         )
         startTrainingTime = time.time()
-        myNetwork.train(learnRate=0.3)
+        myNetwork.train(numOfEpochs=1, learnRate=0.3)
         print(f"Training took: {time.time()-startTrainingTime:.2f} sec")
     elif userInput == "2":
         # Loading centers and weights from save file

@@ -47,7 +47,7 @@ The parameters used for this performance test are as below. These parameters hav
 | Num of Epochs| 1 |
 
 Training using all 60,000 examples takes around 3-4 minutes.  
-**Results:** Using 60,000 training examples, this Network achieved ~89.7% accuracy on the test data.
+**Results:** Using 60,000 training examples, this Network achieved ~90.1% accuracy on the test data.
 
 ## Getting Started
 

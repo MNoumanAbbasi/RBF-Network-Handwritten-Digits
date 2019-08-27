@@ -6,7 +6,7 @@ import math
 import matplotlib.pyplot as plt
 
 np.set_printoptions(threshold=sys.maxsize, suppress=True)
-np.random.seed(0)
+np.random.seed(1)
 
 
 def inputXFromFile(filename, sampleSize):  # SampleSize given for performace enhancement

@@ -37,6 +37,32 @@ def inputYFromFile(filename, sampleSize):
     return inputArray
 
 
+def kMeansClustering(K, sampleData):
+    """Find K cluster centeriods of the passed sampleData
+    """
+    # Randomly select K examples as starting point for centeriods
+    randIndices = np.random.choice(sampleData.shape[0], size=K, replace=False)
+    centeriods = sampleData[randIndices, :]
+
+    dataSize = 10000
+    data = sampleData[:dataSize]
+    for i in range(15):
+        centeriodSums = np.zeros(shape=centeriods.shape)
+        centeriodSumsCounter = np.zeros(shape=K)
+
+        # 1. Allocate a training example to its nearest centriod
+        for x in data:
+             # Get index of closest centeriod to X (minimum of ||C - X||)
+            index = np.argmin(np.square(centeriods - x).sum(axis=1))
+            centeriodSums[index] += x
+            centeriodSumsCounter[index] += 1
+        
+        # 2. Reassign the centriods to new means
+        for i in range(K):
+            centeriods[i] = centeriodSums[i] / centeriodSumsCounter[i]
+    
+    return centeriods
+
 class Network:
     def __init__(self):
         self.XSize = 0
@@ -45,7 +71,7 @@ class Network:
         self.X = []
         self.C = []
         self.Y = []
-        self.W = np.random.uniform(-1, 1, (self.HSize, self.OSize))
+        self.W = []
         # self.B = np.random.uniform(-1, 1, (self.OSize))
         self.trainErrors = []
         self.testErrors = []
@@ -61,13 +87,18 @@ class Network:
         self.Y = inputYFromFile(filenameY, sampleSize)
         self.XSize = sampleSize
 
-    def initializeCenters(self):
+    def initializeCenters(self, K=50):
         """Initializes Centers (for RBF neurons in hidden layer)
         """
-        self.C = self.X[: self.HSize]
+        print("Initialzing Centers...")
+        # self.C = self.X[: self.HSize]
+        self.HSize = K      # Since centriods is equal to hidden layer neurons
+        self.C = kMeansClustering(K, self.X)
 
     def train(self, numOfEpochs=1, learnRate=0.5):
-        self.initializeCenters()
+        # Initialzing centers and weights
+        self.initializeCenters(50)
+        self.W = np.random.uniform(-1, 1, (self.HSize, self.OSize))
         self.trainErrors = np.zeros(shape=self.XSize)  # Preallocating numpy array
         print("Training...")
         for _ in range(numOfEpochs):
@@ -102,7 +133,7 @@ class Network:
             self.testErrors[count] = 0.5 * sum(error ** 2)
 
         totalAvg = (correctCount * 100.0) / (count + 1)
-        print("Total Avg. Accuracy:", totalAvg)
+        print(f"Total Avg. Accuracy: {totalAvg} %")
 
 
 def rbf(x, C, beta=0.05):
@@ -124,44 +155,46 @@ def plotLearningCurves(trainErrors, testErrors):
     avgSize = 100
     if type(trainErrors) is np.ndarray:     # if trainError data is available
         Jtrain = trainErrors.reshape(-1, avgSize).mean(axis=1)
-        plt.plot(Jtrain)
+        plt.plot(Jtrain, label='Training Cost')
     Jtest = testErrors.reshape(-1, avgSize).mean(axis=1)
-    plt.plot(Jtest)
+    plt.plot(Jtest, label='Test Cost')
     plt.xlabel(f"Data examples in {avgSize}s")
     plt.ylabel("Cost")
     plt.show()
 
 
 #######     MAIN    ######
-start = time.time()  # TODO Input data should be functions of neural network class
-trainDataSize = 60000
-testDataSize = 10000
-# MENU
-myNetwork = Network()
-while True:
-    print("1. Train the RBF Network\n2. Predict using the RBF Network")
-    userInput = input("Choose your option: ")
-    if userInput == "1":
-        print("Importing data for training...")
-        startTime = time.time()
-        myNetwork.loadData("train.txt", "train-labels.txt", trainDataSize)
-        print(
-            f"{trainDataSize} training examples imported in {time.time()-startTime:.2f} sec"
-        )
-        startTrainingTime = time.time()
-        myNetwork.train(numOfEpochs=1, learnRate=0.3)
-        print(f"Training took: {time.time()-startTrainingTime:.2f} sec")
-    elif userInput == "2":
-        # Loading centers and weights from save file
-        filename = input("Enter file name containing weights (default: weights.npy): ")
-        myNetwork.W = np.load(filename)
-        myNetwork.C = np.load("centers.npy")
-        # print(myNetwork.W)
-        print("Importing data for testing...")
-        myNetwork.loadData("test.txt", "test-labels.txt", testDataSize)
-        myNetwork.predict()
-        # Uncomment line below to plot learning curves for first 1000 examples
-        plotLearningCurves(myNetwork.trainErrors[:10000], myNetwork.testErrors[:10000])
-    else:
-        break
-print(f"Entire program took: {time.time()-start:.2f} sec")
+if __name__ == "__main__":
+    start = time.time()
+    trainDataSize = 60000
+    testDataSize = 10000
+    # MENU
+    myNetwork = Network()
+    while True:
+        print("1. Train the RBF Network\n2. Predict using the RBF Network")
+        userInput = input("Choose your option: ")
+        if userInput == "1":
+            print("Importing data for training...")
+            startTime = time.time()
+            myNetwork.loadData("train.txt", "train-labels.txt", trainDataSize)
+            print(
+                f"{trainDataSize} training examples imported in {time.time()-startTime:.2f} sec"
+            )
+            
+            startTrainingTime = time.time()
+            myNetwork.train(numOfEpochs=1, learnRate=0.1)
+            print(f"Training took: {time.time()-startTrainingTime:.2f} sec")
+        elif userInput == "2":
+            # Loading centers and weights from save file
+            filename = input("Enter file name containing weights (default: weights.npy): ")
+            myNetwork.W = np.load(filename)
+            myNetwork.C = np.load("centers.npy")
+
+            print("Importing data for testing...")
+            myNetwork.loadData("test.txt", "test-labels.txt", testDataSize)
+            myNetwork.predict()
+
+            plotLearningCurves(myNetwork.trainErrors[:60000], myNetwork.testErrors[:10000])
+        else:
+            break
+    print(f"Entire program took: {time.time()-start:.2f} sec")

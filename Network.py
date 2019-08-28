@@ -79,9 +79,9 @@ class Network:
     def loadData(self, filenameX, filenameY, sampleSize):
         """Loads training/test data\n
         Parameters:\n
-        filenameX: filename for X features\n
-        filenameY: filename for Y (labels)\n
-        sampleSize: number of examples in dataset
+        - filenameX: filename for X features\n
+        - filenameY: filename for Y (labels)\n
+        - sampleSize: number of examples in dataset
         """
         self.X = inputXFromFile(filenameX, sampleSize)
         self.Y = inputYFromFile(filenameY, sampleSize)
@@ -90,8 +90,7 @@ class Network:
     def initializeCenters(self, K, useKMeans):
         """Initializes Centers (for RBF neurons in hidden layer)\n
         Parameters:\n
-        useKMeans: Set to true if you want to use kMeans clustering
-        to get centroids
+        - useKMeans: Set to true to use kMeans clustering to get centroids
         """
         print("Initialzing Centers...")
         self.HSize = K      # Since centriods is equal to hidden layer neurons
@@ -100,14 +99,21 @@ class Network:
         else:
             self.C = self.X[: self.HSize]
 
-    def train(self, numOfEpochs=1, learnRate=0.5, useKMeans=False):
+    def train(self, epochs=1, learnRate=0.5, K=300, useKMeans=False):
+        """Trains the Network\n
+        Parameters:\n
+        - epochs: Number of epochs or trainings on entire dataset
+        - learnRate: Learning Rate
+        - K: Number of centers/centroids
+        - useKMeans: Set to true to use kMeans clustering to get centroids
+        """
         # Initialzing centers and weights
-        self.initializeCenters(300, useKMeans)
+        self.initializeCenters(K, useKMeans)
         self.W = np.random.uniform(-1, 1, (self.HSize, self.OSize))
 
         self.trainErrors = np.zeros(shape=self.XSize)  # Preallocating numpy array
         print("Training...")
-        for _ in range(numOfEpochs):
+        for _ in range(epochs):
             # Take each data sample from the inputData
             for i, x in enumerate(self.X):
                 HLayer = rbf(x, self.C)
@@ -123,6 +129,9 @@ class Network:
         np.save("centers", self.C)
 
     def predict(self):
+        """Predicts using the Network by the set parameters (weight and
+        centers) and displays the accuracy
+        """
         self.testErrors = np.zeros(shape=self.XSize)  # Preallocating numpy array
         print("Prediciting...")
         totalAvg = count = correctCount = 0.0
@@ -188,7 +197,7 @@ if __name__ == "__main__":
             )
             
             startTrainingTime = time.time()
-            myNetwork.train(numOfEpochs=1, learnRate=0.3, useKMeans=False)
+            myNetwork.train(epochs=1, learnRate=0.3, K=300, useKMeans=False)
             print(f"Training took: {time.time()-startTrainingTime:.2f} sec")
         elif userInput == "2":
             # Loading centers and weights from save file

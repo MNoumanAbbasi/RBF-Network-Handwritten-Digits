@@ -87,18 +87,24 @@ class Network:
         self.Y = inputYFromFile(filenameY, sampleSize)
         self.XSize = sampleSize
 
-    def initializeCenters(self, K=50):
-        """Initializes Centers (for RBF neurons in hidden layer)
+    def initializeCenters(self, K, useKMeans):
+        """Initializes Centers (for RBF neurons in hidden layer)\n
+        Parameters:\n
+        useKMeans: Set to true if you want to use kMeans clustering
+        to get centroids
         """
         print("Initialzing Centers...")
-        # self.C = self.X[: self.HSize]
         self.HSize = K      # Since centriods is equal to hidden layer neurons
-        self.C = kMeansClustering(K, self.X)
+        if useKMeans:
+            self.C = kMeansClustering(K, self.X)
+        else:
+            self.C = self.X[: self.HSize]
 
-    def train(self, numOfEpochs=1, learnRate=0.5):
+    def train(self, numOfEpochs=1, learnRate=0.5, useKMeans=False):
         # Initialzing centers and weights
-        self.initializeCenters(50)
+        self.initializeCenters(300, useKMeans)
         self.W = np.random.uniform(-1, 1, (self.HSize, self.OSize))
+
         self.trainErrors = np.zeros(shape=self.XSize)  # Preallocating numpy array
         print("Training...")
         for _ in range(numOfEpochs):
@@ -168,7 +174,7 @@ if __name__ == "__main__":
     start = time.time()
     trainDataSize = 60000
     testDataSize = 10000
-    # MENU
+    
     myNetwork = Network()
     while True:
         print("1. Train the RBF Network\n2. Predict using the RBF Network")
@@ -182,7 +188,7 @@ if __name__ == "__main__":
             )
             
             startTrainingTime = time.time()
-            myNetwork.train(numOfEpochs=1, learnRate=0.1)
+            myNetwork.train(numOfEpochs=1, learnRate=0.3, useKMeans=False)
             print(f"Training took: {time.time()-startTrainingTime:.2f} sec")
         elif userInput == "2":
             # Loading centers and weights from save file
@@ -193,8 +199,8 @@ if __name__ == "__main__":
             print("Importing data for testing...")
             myNetwork.loadData("test.txt", "test-labels.txt", testDataSize)
             myNetwork.predict()
-
-            plotLearningCurves(myNetwork.trainErrors[:60000], myNetwork.testErrors[:10000])
+            # Plotting the errors of the first 10000 examples
+            plotLearningCurves(myNetwork.trainErrors[:10000], myNetwork.testErrors[:10000])
         else:
             break
-    print(f"Entire program took: {time.time()-start:.2f} sec")
+    print("Program exited.")
